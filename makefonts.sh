@@ -1,5 +1,5 @@
 #! /bin/bash
-
+set -x
 TMP=/tmp/rubfonts
 USERTEXMF=`kpsewhich -var-value TEXMFVAR`
 FONTFOLDER=
@@ -28,7 +28,7 @@ files_rename()
     do
        ttf=`basename "${file}"`
        echo "Benenne Datei ${ttf} um."
-       cp -T "${file}" "${TMP}"/"${ttf// /_}"       
+       cp "${file}" "${TMP}"/"${ttf// /_}"       
     done
 }
 
@@ -74,10 +74,10 @@ cp *.map ${USERTEXMF}/fonts/map/dvips/rub/
 do_udpmap()
 {
     texhash ${USERTEXMF}
-    updmap
-    updmap --enable Map=rubscalatz.map
-    updmap --enable Map=rubscalamz.map
-    updmap --enable Map=rubflama.map
+    updmap -sys
+    updmap -sys --enable Map=rubscalatz.map
+    updmap -sys --enable Map=rubscalamz.map
+    updmap -sys --enable Map=rubflama.map
 }
 
 get_sty() 
@@ -136,8 +136,8 @@ then
     get_sty
     texhash ${USERTEXMF}
     do_udpmap
-    exit 1
+    exit 0
 else
     echo "Es wurden nicht alle Schriftdateien gefunden."
-    exit 0
+    exit 1
 fi
